@@ -6,8 +6,8 @@
 #include "Boid.hpp"
 
 #define QUANTIDADE_BOIDS 50
-#define ANGULO_VISAO 135.0f
-#define ALCANCE_VISAO 70.0f
+#define ANGULO_VISAO 180.0f
+#define ALCANCE_VISAO 90.0f
 
 void steeringBehaviour(std::vector<Boid> &boids, std::vector<std::vector<int>> &vizinhos);
 
@@ -78,7 +78,7 @@ void steeringBehaviour(std::vector<Boid> &boids, std::vector<std::vector<int>> &
 				media += boids[j].getDirecao();			
 			}
 			media = media/vizinhos[i].size();
-			boids[i].girarEmDirecao(media, 0.15f);
+			boids[i].girarEmDirecao(media, 0.1f);
 		}
 	}	
 
@@ -87,7 +87,7 @@ void steeringBehaviour(std::vector<Boid> &boids, std::vector<std::vector<int>> &
 		for (auto j : vizinhos[i]){
 			float dst = calcularDistanciaBoids(boids[i], boids[j]);
 			if(dst < 45){
-				boids[i].girarEmDirecao(anguloRelativo(boids[i].getX(), boids[j].getX(), dst) + 180, 5/dst);
+				boids[i].girarEmDirecao(anguloRelativo(boids[i].getX(), boids[j].getX(), dst) + 180, 9/dst);
 			}						
 		}	
 	}
@@ -99,12 +99,10 @@ void atualizarVizinhos(std::vector<Boid> boids, std::vector<std::vector<int>> &v
 		for (int j = 0; j < boids.size(); ++j) {
 			float dst = calcularDistanciaBoids(boids[i], boids[j]);	
 			if(i != j && dst < ALCANCE_VISAO && dentroCampoVisao(boids[i], boids[j], dst)){
-				/* std::cout << "i" << i << "j" << j << " -> " << dst << std::endl; */
 				vizinhos[i].push_back(j);
 			}
 		}
 	}
-	/* std::cout << std::endl; */
 }
 
 float calcularDistancia(float x1, float y1, float x2, float y2){
@@ -131,7 +129,6 @@ bool dentroCampoVisao(Boid &a, Boid &b, float distancia){
 	else if(distancia == 0) return true;
 
 	float angulo = anguloRelativo(a.getX(), b.getX(), distancia);
-	/* std::cout << angulo << std::endl; */
 
 	angulo -= a.getDirecao();
 	if(angulo < 0) angulo += 360;
